@@ -1,0 +1,5 @@
+{
+    "name": "node-executor",
+    "main": "./index",
+    "version": "0.0.1"
+}
