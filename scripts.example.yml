@@ -1,0 +1,50 @@
+runners:
+  - &node
+    executable: node
+    base-args: []
+    args: []
+  - &node-eval
+    <<: *node
+    base-args:
+      - --input-type=commonjs
+      - -e
+      - |
+        const { context } = require('node-executor');
+        const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+        const f = new AsyncFunction(context.script);
+        f();
+  - &shell
+    <<: *node-eval
+    script: |
+      const { context, runCommand } = require('node-executor');
+      await runCommand({
+        executable: context.shell || 'sh',
+        'base-args': [ '-c', context.sh ],
+        args: context.args,
+      });
+  - &sequence
+    <<: *node-eval
+    script: |
+      const { context, runCommand } = require('node-executor');
+      for(const cmd of context.commands) await runCommand(cmd);
+  - &parallel
+    <<: *node-eval
+    script: |
+      const { context, runCommand } = require('node-executor');
+      await Promise.all(context.commands.map(runCommand));
+
+scripts:
+  build:
+    <<: *node
+    args:
+      - build
+      - --prod
+  start-dist:
+    <<: *sequence
+    commands:
+      - <<: *node
+        args:
+          - build
+      - <<: *run-dist
+        args:
+          - dist/app.js
