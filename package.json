@@ -9,7 +9,10 @@
         "js-yaml": "^4.1.0",
         "terminal-kit": "^2.4.0"
     },
+    "engines": {
+        "node": ">=12"
+    },
     "devDependencies": {
-        "@types/node": "^16.11.25"
+        "@types/node": "^12.20.46"
     }
 }
