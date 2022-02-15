@@ -12,7 +12,7 @@ function getScriptContext(){
     const { scripts } = load(readFileSync(resolve(cwd(), 'scripts.yml'), 'utf8'));
     const [,, script ] = argv;
     if(!(script in scripts)){
-        console.error('Cannot find script ' + script + ' in scripts.yml, aborting');
+        console.error('[node-executor] Cannot find script ' + script + ' in scripts.yml, aborting');
         exit(1);
     }
     return scripts[script];
@@ -32,8 +32,8 @@ Object.defineProperty(module.exports, 'runCommand', {
 
 function runCommand(ctx){
     const additionalArgs = isScriptContext ? argv.slice(3) : [];
-    console.log('Running', ctx);
     const { executable, 'base-args': baseArgs, args } = ctx;
+    console.log('[node-executor] Running', executable);
     spawnSync(executable, baseArgs.concat(args, additionalArgs), {
         stdio: 'inherit',
         env: Object.assign({}, env, { [envCtxName]: JSON.stringify(ctx) }),
