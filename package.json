@@ -6,7 +6,8 @@
         "postinstall": "node --input-type=commonjs -e 'require(\"node-executor/scripts/postinstall.js\");'"
     },
     "dependencies": {
-        "js-yaml": "^4.1.0"
+        "js-yaml": "^4.1.0",
+        "terminal-kit": "^2.4.0"
     },
     "devDependencies": {
         "@types/node": "^16.11.25"
