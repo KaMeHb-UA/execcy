@@ -29,7 +29,7 @@ function addScriptsExampleToGitignore(){
     const gitignore = getGitignoreEntries();
     const ignoresScriptsExample = gitignore.includes(gitignoreComment);
     if(!ignoresScriptsExample){
-        writeFileSync(gitignorePath, '\n' + gitignoreComment + '\n/scripts.example.yml', { flag: 'a' });
+        writeFileSync(gitignorePath, '\n' + gitignoreComment + '\n/scripts.example.yml\n', { flag: 'a' });
     }
 }
 
