@@ -1,5 +1,14 @@
 {
     "name": "node-executor",
     "main": "./index",
-    "version": "0.0.1"
+    "version": "0.0.1",
+    "scripts": {
+        "postinstall": "node --input-type=commonjs -e 'require(\"node-executor/scripts/postinstall.js\");'"
+    },
+    "dependencies": {
+        "js-yaml": "^4.1.0"
+    },
+    "devDependencies": {
+        "@types/node": "^16.11.25"
+    }
 }
