@@ -4,7 +4,7 @@ const { cwd } = require('process');
 
 const gitignoreComment = '# Automatically added by node-executor. If you want to modify this behavior you can remove next line but leave the comment itself';
 
-const copySrcDir = resolve(__dirname, 'project-root'),
+const copySrcDir = resolve(__dirname, '..', 'project-root'),
     copyTargetDir = cwd();
 
 const filesToCopy = readdirSync(copySrcDir),
