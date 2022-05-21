@@ -14,12 +14,10 @@ jobs:
           script: |
             const { readFileSync, writeFileSync } = require('fs');
             const { fileURLToPath } = require('url');
-            const { resolve } = require('path');
-            const { cwd } = require('process');
-            const file = resolve(cwd(), 'package.json');
-            const content = JSON.parse(readFileSync(file, 'utf8'));
+            const pkgJson = require.resolve('./package.json');
+            const content = JSON.parse(readFileSync(pkgJson, 'utf8'));
             content.version = "${{ github.event.release.tag_name }}";
-            writeFileSync(file, JSON.stringify(content, null, '    '));
+            writeFileSync(pkgJson, JSON.stringify(content, null, '    '));
 
       - uses: JS-DevTools/npm-publish@v1
         with:
