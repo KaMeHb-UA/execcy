@@ -3,6 +3,8 @@ runners:
     executable: node
     base-args: []
     args: []
+    hide-executable-name: true
+
   - &node-eval
     <<: *node
     base-args:
@@ -10,9 +12,14 @@ runners:
       - -e
       - |
         const { context } = require('node-executor');
+        const { exit } = require('process');
         const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
         const f = new AsyncFunction(context.script);
-        f();
+        f().catch(e => {
+          console.error(e);
+          exit(1);
+        });
+
   - &shell
     <<: *node-eval
     script: |
@@ -21,30 +28,67 @@ runners:
         executable: context.shell || 'sh',
         'base-args': [ '-c', context.sh ],
         args: context.args,
+        'hide-executable-name': true,
+        'log-exit': false,
       });
+
   - &sequence
     <<: *node-eval
     script: |
       const { context, runCommand } = require('node-executor');
       for(const cmd of context.commands) await runCommand(cmd);
+
   - &parallel
     <<: *node-eval
     script: |
       const { context, runCommand } = require('node-executor');
       await Promise.all(context.commands.map(runCommand));
 
+  - &dist-runner
+    <<: *node
+    base-args:
+      - --unhandled-rejections=strict
+      - --enable-source-maps
+
 scripts:
   build:
     <<: *node
+    name: Build
     args:
       - build
       - --prod
-  start-dist:
+
+  start:
     <<: *sequence
+    name: Start
     commands:
       - <<: *node
+        name: Build
         args:
           - build
-      - <<: *run-dist
+      - <<: *dist-runner
+        log-exit: false
         args:
           - dist/app.js
+
+  test-parallel-executions:
+    <<: *parallel
+    name: Test
+    commands:
+      - <<: *shell
+        name: first
+        sh: |
+          echo 1
+          sleep 2
+          echo 2
+          sleep 2
+          echo 3
+          sleep 2
+          echo 4
+      - <<: *shell
+        name: second
+        sh: |
+          sleep 1
+          echo I"'"m
+          sleep 2
+          echo here
