@@ -1,8 +1,8 @@
-async function req(module){
-    return typeof require === 'undefined' ? import(module) : require(module);
+async function loadModule(){
+    return typeof require === 'undefined' ? import('node-executor') : require('node-executor');
 }
 
 void async function(){
-    const { context, runCommand } = await req('node-executor');
+    const { context, runCommand } = await loadModule();
     runCommand(context);
 }()
