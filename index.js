@@ -11,6 +11,10 @@ const { [envCtxName]: envCtx } = env;
 let isScriptContext = false;
 const escape = '\u001b';
 
+const binDir = resolve(__dirname, '..', '.bin');
+const binDir2 = resolve(cwd(), 'node_modules', '.bin');
+const newPath = binDir === binDir2 ? `${binDir}:${env.PATH}` : `${binDir}:${binDir2}:${env.PATH}`;
+
 function clearCC(str){
     return (str || '')
         .replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
@@ -138,7 +142,10 @@ async function runCommand(ctx){
     const printableName = hideExecutableName && name === undefined ? '' : color256(`${name ?? executable} | `, colorFromString(serializedCtx));
     try{
         for await(const [ stdoutText, stderrText ] of run(executable, baseArgs.concat(args, additionalArgs), {
-            env: Object.assign({}, env, { [envCtxName]: serializedCtx }),
+            env: Object.assign({}, env, {
+                [envCtxName]: serializedCtx,
+                PATH: newPath,
+            }),
         })){
             const text = stdoutText || stderrText;
             const formattedText = colored(clearCC(text), stdoutText ? 34 : 31);
