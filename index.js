@@ -125,6 +125,8 @@ function run(cmd, args, options = {}){
  *  name?: string;
  *  'hide-executable-name'?: boolean;
  *  'log-exit'?: boolean;
+ *  env?: {[x: string]: string};
+ *  cwd?: string;
  * }} ctx
  */
 
@@ -135,8 +137,10 @@ async function runCommand(ctx){
         args,
         'hide-executable-name': hideExecutableName,
         name,
+        cwd,
     } = ctx;
     const logExit = ctx['log-exit'] === undefined || ctx['log-exit'];
+    const ctxEnv = 'env' in ctx ? ctx.env : {};
     const serializedCtx = JSON.stringify(ctx);
     const additionalArgs = isScriptContext ? argv.slice(3) : [];
     const printableName = hideExecutableName && name === undefined ? '' : color256(`${name ?? executable} | `, colorFromString(serializedCtx));
@@ -145,7 +149,8 @@ async function runCommand(ctx){
             env: Object.assign({}, env, {
                 [envCtxName]: serializedCtx,
                 PATH: newPath,
-            }),
+            }, ctxEnv),
+            cwd,
         })){
             const text = stdoutText || stderrText;
             const formattedText = colored(clearCC(text), stdoutText ? 34 : 31);
