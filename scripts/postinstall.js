@@ -2,7 +2,7 @@ const { readdirSync, copyFileSync, readFileSync, writeFileSync } = require('fs')
 const { resolve } = require('path');
 const { cwd, env } = require('process');
 
-const gitignoreComment = '# Automatically added by node-executor. If you want to modify this behavior you can remove next line but leave the comment itself';
+const gitignoreComment = '# Automatically added by execy. If you want to modify this behavior you can remove next line but leave the comment itself';
 
 const copySrcDir = resolve(__dirname, '..', 'project-root'),
     copyTargetDir = env.INIT_CWD || cwd();
