@@ -4,5 +4,5 @@ async function loadModule(){
 
 void async function(){
     const { context, runCommand } = await loadModule();
-    runCommand(context);
+    await runCommand(context);
 }()
