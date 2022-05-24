@@ -1,9 +1,9 @@
 {
-    "name": "node-executor",
+    "name": "execcy",
     "main": "./index",
     "version": "0.0.1",
     "scripts": {
-        "postinstall": "node --input-type=commonjs -e 'require(\"node-executor/scripts/postinstall.js\");'"
+        "postinstall": "node --input-type=commonjs -e 'require(\"execcy/scripts/postinstall.js\");'"
     },
     "dependencies": {
         "js-yaml": "^4.1.0"

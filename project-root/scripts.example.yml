@@ -11,7 +11,7 @@ runners:
       - --input-type=commonjs
       - -e
       - |
-        const { context } = require('node-executor');
+        const { context } = require('execcy');
         const { exit } = require('process');
         const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
         const f = new AsyncFunction(context.script);
@@ -23,7 +23,7 @@ runners:
   - &shell
     <<: *node-eval
     script: |
-      const { context, runCommand } = require('node-executor');
+      const { context, runCommand } = require('execcy');
       await runCommand({
         executable: context.shell || 'sh',
         'base-args': [ '-c', context.sh ],
@@ -35,13 +35,13 @@ runners:
   - &sequence
     <<: *node-eval
     script: |
-      const { context, runCommand } = require('node-executor');
+      const { context, runCommand } = require('execcy');
       for(const cmd of context.commands) await runCommand(cmd);
 
   - &parallel
     <<: *node-eval
     script: |
-      const { context, runCommand } = require('node-executor');
+      const { context, runCommand } = require('execcy');
       await Promise.all(context.commands.map(runCommand));
 
   - &dist-runner

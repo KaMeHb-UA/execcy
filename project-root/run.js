@@ -1,5 +1,5 @@
 async function loadModule(){
-    return typeof require === 'undefined' ? import('node-executor') : require('node-executor');
+    return typeof require === 'undefined' ? import('execcy') : require('execcy');
 }
 
 void async function(){
